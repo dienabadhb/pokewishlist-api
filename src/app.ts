@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { addItem, removeItem, wishlist } from './store'
 import { tryAdd } from './rules'
+console.log('test')
 
 export const app = new Hono()
 
