@@ -1,11 +1,6 @@
 import { Hono } from 'hono'
-import {
-  MAX_WISHLIST_SIZE,
-  addItem,
-  removeItem,
-  wishlist,
-  type WishItem,
-} from './store'
+import { addItem, removeItem, wishlist } from './store'
+import { tryAdd } from './rules'
 
 export const app = new Hono()
 
@@ -21,25 +16,20 @@ app.post('/wishlist', async (c) => {
     return c.json({ error: 'JSON invalide' }, 400)
   }
 
-  const { id, name, sprite } = (body ?? {}) as Partial<WishItem>
-  if (typeof id !== 'number' || typeof name !== 'string' || !name.trim()) {
-    return c.json({ error: 'id (nombre) et name (texte) sont requis' }, 400)
-  }
-  if (wishlist.some((p) => p.id === id)) {
-    return c.json({ error: 'Pokémon déjà dans la wishlist' }, 409)
-  }
-  if (wishlist.length >= MAX_WISHLIST_SIZE) {
-    return c.json({ error: 'Wishlist pleine' }, 409)
+  const result = tryAdd(wishlist, body)
+  if (!result.ok) {
+    if (result.error === 'invalid') {
+      return c.json({ error: 'id (nombre) et name (texte) sont requis' }, 400)
+    }
+    const message =
+      result.error === 'duplicate'
+        ? 'Pokémon déjà dans la wishlist'
+        : 'Wishlist pleine'
+    return c.json({ error: message }, 409)
   }
 
-  const item: WishItem = {
-    id,
-    name: name.trim(),
-    sprite: typeof sprite === 'string' ? sprite : null,
-    addedAt: Date.now(),
-  }
-  addItem(item)
-  return c.json(item, 201)
+  addItem(result.item)
+  return c.json(result.item, 201)
 })
 
 app.delete('/wishlist/:id', (c) => {
