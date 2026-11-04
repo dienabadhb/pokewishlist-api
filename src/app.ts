@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import { addItem, removeItem, wishlist } from './store'
 import { tryAdd } from './rules'
 
@@ -48,15 +49,3 @@ app.delete('/wishlist/:id', (c) => {
   }
   return c.json({ deleted: id })
 })
-function cors(arg0: {
-  origin: string[]
-  allowMethods: string[]
-  allowHeaders: string[]
-}): import('hono').MiddlewareHandler<
-  import('hono/types').BlankEnv,
-  '*',
-  any,
-  any
-> {
-  throw new Error('Function not implemented.')
-}
