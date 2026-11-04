@@ -30,7 +30,7 @@ export function tryAdd(
   if (list.some((p) => p.id === valid.id)) {
     return { ok: false, error: 'duplicate' }
   }
-  if (list.length >= MAX_WISHLIST_SIZE) return { ok: false, error: 'full' }
+  if (list.length > MAX_WISHLIST_SIZE) return { ok: false, error: 'full' }
   return { ok: true, item: { ...valid, addedAt: now } }
 }
 
