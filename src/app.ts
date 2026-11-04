@@ -1,8 +1,18 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import { addItem, removeItem, wishlist } from './store'
 import { tryAdd } from './rules'
 
 export const app = new Hono()
+
+app.use(
+  '*',
+  cors({
+    origin: ['http://localhost:3001'],
+    allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+    allowHeaders: ['Content-Type'],
+  }),
+)
 
 app.get('/health', (c) => c.json({ status: 'ok' }))
 
