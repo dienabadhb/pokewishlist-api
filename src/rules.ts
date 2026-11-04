@@ -3,8 +3,7 @@ import { MAX_WISHLIST_SIZE, type WishItem } from './store'
 export type AddError = 'invalid' | 'duplicate' | 'full'
 
 export type AddResult =
-  | { ok: true; item: WishItem }
-  | { ok: false; error: AddError }
+  { ok: true; item: WishItem } | { ok: false; error: AddError }
 
 export function validateInput(
   input: unknown,
