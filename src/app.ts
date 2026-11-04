@@ -4,6 +4,15 @@ import { tryAdd } from './rules'
 
 export const app = new Hono()
 
+app.use(
+  '*',
+  cors({
+    origin: ['http://localhost:3001'],
+    allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+    allowHeaders: ['Content-Type'],
+  }),
+)
+
 app.get('/health', (c) => c.json({ status: 'ok' }))
 
 app.get('/wishlist', (c) => c.json(wishlist))
@@ -39,3 +48,15 @@ app.delete('/wishlist/:id', (c) => {
   }
   return c.json({ deleted: id })
 })
+function cors(arg0: {
+  origin: string[]
+  allowMethods: string[]
+  allowHeaders: string[]
+}): import('hono').MiddlewareHandler<
+  import('hono/types').BlankEnv,
+  '*',
+  any,
+  any
+> {
+  throw new Error('Function not implemented.')
+}
